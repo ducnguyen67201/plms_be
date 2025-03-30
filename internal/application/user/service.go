@@ -15,3 +15,11 @@ func (s *UserAppService) Register(user user_domain.User) (*user_domain.User, err
 	}
 	return domainUser, nil
 }
+
+func (s *UserAppService) Login(username string, password string) (*user_domain.User, error) {
+	user, err := s.UserService.Login(username, password)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

@@ -32,3 +32,23 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
+
+func (h *Handler) LoginUser(c *gin.Context) {
+	var input struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	user, err := h.AppService.Login(input.Username, input.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to login user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

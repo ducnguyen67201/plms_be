@@ -3,12 +3,12 @@ package user_domain
 import "errors"
 
 type User struct {
-	user_id           int64  `json:"user_id"`
-	role_id           int64  `json:"role_id"`
-	username          string `json:"username"`
-	password          string `json:"password"`
-	email             string `json:"email"`
-	registration_date string `json:"registration_date"`
+	UserID          int64  `json:"user_id"`
+	RoleID          int64  `json:"role_id"`
+	Username        string `json:"username"`
+	Password        string `json:"password"`
+	Email           string `json:"email"`
+	RegistrationDate string `json:"registration_date"`
 }
 
 func NewUser(user_id int64, role_id int64, username string, password string, email string, registration_date string) (*User, error) {
@@ -17,11 +17,11 @@ func NewUser(user_id int64, role_id int64, username string, password string, ema
 	}
 
 	return &User{
-		user_id:           user_id,
-		role_id:           role_id,
-		username:          username,
-		password:          password,
-		email:             email,
-		registration_date: registration_date,
+		UserID:          user_id,
+		RoleID:          role_id,
+		Username:        username,
+		Password:        password,
+		Email:           email,
+		RegistrationDate: registration_date,
 	}, nil
 }

@@ -21,3 +21,11 @@ func (s *Service) RegisterUser(userId int64, roleId int64, username string, pass
 
 	return user, nil
 }
+
+func (s *Service) Login(username string, password string) (*User, error) {
+	user, err := s.repo.FindByUsernameAndPassword(username, password)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

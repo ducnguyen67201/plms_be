@@ -2,24 +2,31 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	user_app "plms_be/internal/application/user"
 	user_domain "plms_be/internal/domain/user"
 	user_oracle_db "plms_be/internal/infrastructure/persistence/user"
 	user_http "plms_be/internal/interfaces/http/user"
 
-	"github.com/gin-gonic/gin"
 	_ "github.com/alexbrainman/odbc"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
 	r := gin.Default()
 
-	db, err := sql.Open("odbc", "DSN=OracleXE;UID=damg7275_final;PWD=damg7275_final")
+	connStr := "Driver={Oracle in OraDB21Home1};Dbq=localhost:1521/xe;Uid=damg7275_final;Pwd=damg7275_final;"
+	db, err := sql.Open("odbc", connStr)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("db.Ping failed:", err)
+	}
+
 
 	repo := &user_oracle_db.OracleUserRepository{DB: db}
 	userDomain := user_domain.NewService(repo)
