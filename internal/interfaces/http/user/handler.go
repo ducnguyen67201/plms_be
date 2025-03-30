@@ -4,6 +4,7 @@ import (
 	"net/http"
 	user_app "plms_be/internal/application/user"
 	user_domain "plms_be/internal/domain/user"
+	ViewModel "plms_be/viewModel"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,6 +35,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 }
 
 func (h *Handler) LoginUser(c *gin.Context) {
+	var response ViewModel.CommonResponse
 	var input struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -46,9 +48,15 @@ func (h *Handler) LoginUser(c *gin.Context) {
 
 	user, err := h.AppService.Login(input.Username, input.Password)
 	if err != nil {
+		response.Result = "fail"
+		response.Message = err.Error()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to login user"})
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	response.Result = "success"
+	response.Message = "Login successful"
+	response.Data = user
+
+	c.JSON(http.StatusOK, response)
 }
