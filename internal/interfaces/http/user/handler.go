@@ -2,6 +2,7 @@ package user_http
 
 import (
 	"net/http"
+	Const "plms_be/const"
 	user_app "plms_be/internal/application/user"
 	user_domain "plms_be/internal/domain/user"
 	ViewModel "plms_be/viewModel"
@@ -48,13 +49,13 @@ func (h *Handler) LoginUser(c *gin.Context) {
 
 	user, err := h.AppService.Login(input.Username, input.Password)
 	if err != nil {
-		response.Result = "fail"
+		response.Result = Const.FAIL
 		response.Message = err.Error()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to login user"})
 		return
 	}
 
-	response.Result = "success"
+	response.Result = Const.SUCCESS
 	response.Message = "Login successful"
 	response.Data = user
 

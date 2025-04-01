@@ -9,6 +9,22 @@ type User struct {
 	Password        string `json:"password"`
 	Email           string `json:"email"`
 	RegistrationDate string `json:"registration_date"`
+	Profile Profile `json:"profile"`
+	Role string `json:"role"`
+}
+
+type Profile struct { 
+	Profile_id int64 `json:"profile_id"`
+	User_id int64 `json:"user_id"`
+	Bio string `json:"bio"`
+	Picture_url string `json:"picture_url"`
+	Location string `json:"location"`
+	Linkedin_url string `json:"linkedin_url"`
+	Github_url string `json:"github_url"`
+	Profile_view int64 `json:"profile_view"`
+	Contest_attending int64 `json:"contest_attending"`
+	Problem_solved int64 `json:"problem_solved"`
+	Date_of_birth string `json:"date_of_birth"`
 }
 
 func NewUser(user_id int64, role_id int64, username string, password string, email string, registration_date string) (*User, error) {
