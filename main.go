@@ -3,9 +3,13 @@ package main
 import (
 	"database/sql"
 	"log"
+	problem_app "plms_be/internal/application/problem"
 	user_app "plms_be/internal/application/user"
+	problem_domain "plms_be/internal/domain/problem"
 	user_domain "plms_be/internal/domain/user"
+	problem_db "plms_be/internal/infrastructure/persistence/problem"
 	user_oracle_db "plms_be/internal/infrastructure/persistence/user"
+	problem_http "plms_be/internal/interfaces/http/problem"
 	user_http "plms_be/internal/interfaces/http/user"
 	"time"
 
@@ -37,12 +41,19 @@ func main() {
 		log.Fatal("db.Ping failed:", err)
 	}
 
-
+	// User Service
 	repo := &user_oracle_db.OracleUserRepository{DB: db}
 	userDomain := user_domain.NewService(repo)
 	userService := &user_app.UserAppService{UserService: userDomain}
 
-	user_http.RegisterRoutes(r, userService)
+	// Problem Service
+	problemRepo := &problem_db.OracleProblemRepository{DB: db}
+	problemDomain := problem_domain.NewProblemService(problemRepo)
+	problemService := &problem_app.ProblemAppService{ProblemService: problemDomain}
 
+
+	user_http.RegisterRoutes(r, userService)
+	problem_http.RegisterProblemRoutes(r, problemService)
+	
 	r.Run(":8080")
 }
