@@ -3,12 +3,16 @@ package main
 import (
 	"database/sql"
 	"log"
+	discussion_app "plms_be/internal/application/discussion"
 	problem_app "plms_be/internal/application/problem"
 	user_app "plms_be/internal/application/user"
+	discussion_domain "plms_be/internal/domain/discussion"
 	problem_domain "plms_be/internal/domain/problem"
 	user_domain "plms_be/internal/domain/user"
+	discussion_db "plms_be/internal/infrastructure/persistence/discussion"
 	problem_db "plms_be/internal/infrastructure/persistence/problem"
 	user_oracle_db "plms_be/internal/infrastructure/persistence/user"
+	discussion_http "plms_be/internal/interfaces/http/dicussion"
 	problem_http "plms_be/internal/interfaces/http/problem"
 	user_http "plms_be/internal/interfaces/http/user"
 	"time"
@@ -51,9 +55,14 @@ func main() {
 	problemDomain := problem_domain.NewProblemService(problemRepo)
 	problemService := &problem_app.ProblemAppService{ProblemService: problemDomain}
 
+	// Discussion Service
+	discussionRepo := &discussion_db.OracleDiscussionRepository{DB: db}
+	dicussDomain := discussion_domain.NewDiscussionService(discussionRepo)
+	discussionService := &discussion_app.DiscussionAppService{DiscussionService: dicussDomain}
 
 	user_http.RegisterRoutes(r, userService)
 	problem_http.RegisterProblemRoutes(r, problemService)
-	
+	discussion_http.RegisterDiscussionRoutes(r, discussionService)
+
 	r.Run(":8080")
 }
