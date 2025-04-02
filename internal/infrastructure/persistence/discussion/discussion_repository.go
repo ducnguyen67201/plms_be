@@ -19,7 +19,7 @@ func (r *OracleDiscussionRepository) GetAllDiscussion() ([]*discussion_domain.Di
 	var discussions []*discussion_domain.Discussion
 	for rows.Next() {
 		var discussion discussion_domain.Discussion
-		if err := rows.Scan(&discussion.DiscussionID, &discussion.Title, &discussion.Content); err != nil {
+		if err := rows.Scan(&discussion.DiscussionID, &discussion.Title, &discussion.Topic, &discussion.Content, &discussion.Discussion_like, &discussion.Created_date, &discussion.Created_by); err != nil {
 			return nil, err
 		}
 		discussions = append(discussions, &discussion)
