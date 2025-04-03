@@ -74,3 +74,27 @@ func (h *ProblemHandler) SaveProblem(c *gin.Context) {
 	response.Message = "Save problem successfully"
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *ProblemHandler) SaveTestCase(c *gin.Context) {
+	var req problem_domain.PartialTestCaseUpdate
+	var response ViewModel.CommonResponse
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err := h.ProblemService.SaveTestCase(&req)
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Result = Const.SUCCESS
+	response.Message = "Save test case successfully"
+	c.JSON(http.StatusOK, response)
+}

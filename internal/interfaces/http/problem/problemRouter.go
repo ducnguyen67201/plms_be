@@ -15,4 +15,9 @@ func RegisterProblemRoutes(router *gin.Engine, appService *problem_app.ProblemAp
 		ProblemGroup.POST("/:id", h.GetProblemById)
 		ProblemGroup.POST("/save", h.SaveProblem)
 	}
+
+	TestCaseGroup := router.Group("/testcase")
+	{
+		TestCaseGroup.POST("/save", h.SaveTestCase)
+	}
 }

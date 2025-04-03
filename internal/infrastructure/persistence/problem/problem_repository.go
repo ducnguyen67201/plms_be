@@ -104,16 +104,14 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 			firstRow = false
 		}
 
-		if isActive == "Y" { 
-			problem.TestCase = append(problem.TestCase, problem_domain.TestCase{
-				TestCaseID:     testCaseID,
-				Input:          input,
-				ExpectedOutput: expectedOutput,
-				CreatedAt:      createdAt,
-				UpdatedAt:      updatedAt,
-				IsActive:       isActive,
-			})
-		}
+		problem.TestCase = append(problem.TestCase, problem_domain.TestCase{
+			TestCaseID:     testCaseID,
+			Input:          input,
+			ExpectedOutput: expectedOutput,
+			CreatedAt:      createdAt,
+			UpdatedAt:      updatedAt,
+			IsActive:       isActive,
+		})
 	}
 
 	return problem, nil
@@ -163,6 +161,59 @@ func (r *OracleProblemRepository) SaveProblemDomain(problem *problem_domain.Prob
 		problem.RepeatedTimes,
 		problem.Type,
 		problem.ProblemID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *OracleProblemRepository) GetTestCaseById(id int64) (*problem_domain.TestCase, error) {
+	query := `SELECT * FROM Test_Case WHERE test_case_id = :1;`
+	
+	row := r.DB.QueryRow(query, id)
+	var testCase problem_domain.TestCase
+	err := row.Scan(
+		&testCase.TestCaseID,
+		&testCase.ProblemID,
+		&testCase.Input,
+		&testCase.ExpectedOutput,
+		&testCase.CreatedAt,
+		&testCase.UpdatedAt,
+		&testCase.IsActive,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("no test case found with ID %d", id)
+		}
+		return nil, err
+	}
+	return &testCase, nil
+
+}
+
+func (r *OracleProblemRepository) SaveTestCaseDomain(testCase *problem_domain.TestCase) error {	
+	query := `
+	UPDATE Test_Case
+	SET problem_id = :1,
+		Input = :2,
+		Expected_Output = :3,
+		Created_At = TO_DATE(:4, 'YYYY-MM-DD HH24:MI:SS'),
+		Updated_At = TO_DATE(:5, 'YYYY-MM-DD HH24:MI:SS'),
+		Is_active = :6
+	WHERE test_case_id = :7;`
+
+	_, err := r.DB.Exec(query,
+		testCase.ProblemID,
+		testCase.Input,
+		testCase.ExpectedOutput,
+		testCase.CreatedAt,
+		testCase.UpdatedAt,
+		testCase.IsActive,
+		testCase.TestCaseID,
 	)
 
 	if err != nil {

@@ -33,9 +33,20 @@ type ProblemWithTestCase struct {
 
 type TestCase struct {
 	TestCaseID     int64   `json:"test_case_id"`
+	ProblemID      int64   `json:"problem_id"`
 	Input          string  `json:"input"`
 	ExpectedOutput string  `json:"expected_output"`
 	CreatedAt      *string `json:"created_at"`
 	UpdatedAt      *string `json:"updated_at"`
 	IsActive       string  `json:"is_active"`
+}
+
+type PartialTestCaseUpdate struct {
+	TestCaseID     *int64  `json:"test_case_id"`
+	ProblemID      *int64  `json:"problem_id"`
+	Input          *string `json:"input"`
+	ExpectedOutput *string `json:"expected_output"`
+	CreatedAt      *string `json:"created_at"`
+	UpdatedAt      *string `json:"updated_at"`
+	IsActive       *string `json:"is_active"`
 }

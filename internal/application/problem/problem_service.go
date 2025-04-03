@@ -29,3 +29,19 @@ func (p *ProblemAppService) SaveProblem(problem *problem_domain.PartialProblemUp
 	}
 	return nil
 }
+
+func (p *ProblemAppService) GetTestCaseById(id int64) (*problem_domain.TestCase, error) {
+	TestCase, err := p.ProblemService.GetTestCaseByIdDomain(id)
+	if err != nil {
+		return nil, err
+	}
+	return TestCase, nil
+}
+
+func (p *ProblemAppService) SaveTestCase(testCase *problem_domain.PartialTestCaseUpdate)  error {
+	err := p.ProblemService.SaveTestCaseDomain(testCase)
+	if err != nil {
+		return err
+	}
+	return nil
+}
