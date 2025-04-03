@@ -23,3 +23,32 @@ func (s *ProblemService) GetProblemByIdDomain(id string) (*ProblemWithTestCase, 
 	}
 	return problem, nil
 }
+
+func (s *ProblemService) SaveProblemDomain(patch *PartialProblemUpdate) error {
+	problemByID, err := s.repo.GetProblemById(*patch.ProblemID)
+	if err != nil {
+		return err
+	}
+
+	if patch.Title != nil {
+		problemByID.Title = *patch.Title
+	}
+	if patch.Description != nil {
+		problemByID.Description = *patch.Description
+	}
+	if patch.DifficultyLevel != nil {
+		problemByID.DifficultyLevel = *patch.DifficultyLevel
+	}
+	if patch.RepeatedTimes != nil {
+		problemByID.RepeatedTimes = *patch.RepeatedTimes
+	}
+	if patch.Type != nil {
+		problemByID.Type = *patch.Type
+	}
+
+	err = s.repo.SaveProblemDomain(problemByID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

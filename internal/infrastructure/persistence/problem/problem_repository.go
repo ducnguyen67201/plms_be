@@ -2,6 +2,7 @@ package problem_db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	problem_domain "plms_be/internal/domain/problem"
 )
@@ -118,3 +119,55 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 	return problem, nil
 }
 
+func (r *OracleProblemRepository) GetProblemById(id int64) (*problem_domain.Problem, error) {
+	query := `select * from problem WHERE problem_id = :1;`
+
+	row := r.DB.QueryRow(query, int(id))
+
+	var problem problem_domain.Problem
+	err := row.Scan(
+		&problem.ProblemID,
+		&problem.ContestID,
+		&problem.Title,
+		&problem.Description,
+		&problem.DifficultyLevel,
+		&problem.RepeatedTimes,
+		&problem.Type,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("no problem found with ID %d", id)
+		}
+		return nil, err
+	}
+
+	return &problem, nil
+}
+
+func (r *OracleProblemRepository) SaveProblemDomain(problem *problem_domain.Problem) error {
+	query := `UPDATE Problem
+		SET contest_id = :1,
+			title = :2,
+			description = :3,
+			difficulty_level = :4,
+			repeated_times = :5,
+			type = :6
+		WHERE problem_id = :7;`
+
+	_, err := r.DB.Exec(query,
+		&problem.ContestID,
+		problem.Title,
+		problem.Description,
+		problem.DifficultyLevel,
+		problem.RepeatedTimes,
+		problem.Type,
+		problem.ProblemID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

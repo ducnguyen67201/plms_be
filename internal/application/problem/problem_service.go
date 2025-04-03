@@ -21,3 +21,11 @@ func (p *ProblemAppService) GetProblemById(id string) (*problem_domain.ProblemWi
 	}
 	return problems, nil
 }
+
+func (p *ProblemAppService) SaveProblem(problem *problem_domain.PartialProblemUpdate) error {
+	err := p.ProblemService.SaveProblemDomain(problem)
+	if err != nil {
+		return err
+	}
+	return nil
+}
