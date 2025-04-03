@@ -100,6 +100,7 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 				Type:            problemType,
 				TestCase:       []problem_domain.TestCase{},
 			}
+			firstRow = false
 		}
 
 		if isActive == "Y" { 
