@@ -13,3 +13,11 @@ func (p *ProblemAppService) GetAllProblem() ([]*problem_domain.Problem, error) {
 	}
 	return problems, nil
 }
+
+func (p *ProblemAppService) GetProblemById(id string) (*problem_domain.ProblemWithTestCase, error) {
+	problems, err := p.ProblemService.GetProblemByIdDomain(id)
+	if err != nil {
+		return nil, err
+	}
+	return problems, nil
+}

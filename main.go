@@ -40,6 +40,7 @@ func main() {
 
 	connStr := "Driver={Oracle in OraDB21Home1};Dbq=localhost:1521/xe;Uid=damg7275_final;Pwd=damg7275_final;"
 	db, err := sql.Open("odbc", connStr)
+
 	if err != nil {
 		panic(err)
 	}

@@ -12,5 +12,6 @@ func RegisterProblemRoutes(router *gin.Engine, appService *problem_app.ProblemAp
 	ProblemGroup := router.Group("/problem")
 	{
 		ProblemGroup.POST("/all", h.GetAllProblem)
+		ProblemGroup.POST("/:id", h.GetProblemById)
 	}
 }

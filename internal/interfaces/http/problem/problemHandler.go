@@ -32,3 +32,20 @@ func (h *ProblemHandler) GetAllProblem(c *gin.Context) {
 	response.Data = problems
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *ProblemHandler) GetProblemById(c *gin.Context) {
+	var response ViewModel.CommonResponse
+	id := c.Param("id")
+	problem, err := h.ProblemService.GetProblemById(id)
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Result = Const.SUCCESS
+	response.Message = "Get problem successfully"
+	response.Data = problem
+	c.JSON(http.StatusOK, response)
+}

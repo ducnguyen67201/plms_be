@@ -15,3 +15,11 @@ func (s *ProblemService) GetAllProblemDomain() ([]*Problem, error) {
 	}
 	return problems, nil
 }
+
+func (s *ProblemService) GetProblemByIdDomain(id string) (*ProblemWithTestCase, error) {
+	problem, err := s.repo.GetProblemByIdDomain(id)
+	if err != nil {
+		return nil, err
+	}
+	return problem, nil
+}
