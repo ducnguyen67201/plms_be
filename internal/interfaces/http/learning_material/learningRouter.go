@@ -12,5 +12,7 @@ func RegisterLearningRoutes(router *gin.Engine, appService *learning_app.Learnin
 	LearningGroup := router.Group("/learning")
 	{
 		LearningGroup.POST("/all", h.GetAllLearning)
+		LearningGroup.POST("/:id", h.GetLearningByID)
+		LearningGroup.POST("/save", h.SaveLearning)
 	}
 }

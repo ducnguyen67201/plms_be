@@ -13,3 +13,19 @@ func (l *LearningAppService) GetAllLearning() ([]*learning_domain.LearningMateri
 	}
 	return learningMaterials, nil
 }
+
+func (l *LearningAppService) GetLearningByID(id int64) (*learning_domain.LearningMaterial, error) {
+	learningMaterial, err := l.LearningService.GetLearningByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return learningMaterial, nil
+}
+
+func (l *LearningAppService) SaveLearning(learningMaterial *learning_domain.PartialLearningMaterial) error {
+	err := l.LearningService.SaveLearning(learningMaterial)
+	if err != nil {
+		return err
+	}
+	return nil
+}
