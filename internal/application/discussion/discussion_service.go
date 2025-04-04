@@ -13,3 +13,19 @@ func (d *DiscussionAppService) GetAllDiscussion() ([]*discussion_domain.Discussi
 	}
 	return discussions, nil
 }
+
+func (d *DiscussionAppService) GetDiscussionById(id int64) (*discussion_domain.Discussion, error) {
+	discussion, err := d.DiscussionService.GetDiscussionById(id)
+	if err != nil {
+		return nil, err
+	}
+	return discussion, nil
+}
+
+func (d *DiscussionAppService) SaveDiscussion(discussion *discussion_domain.PartialDiscussionUpdate)  error {
+	err := d.DiscussionService.SaveDiscussion(discussion)
+	if err != nil {
+		return err
+	}
+	return nil
+}

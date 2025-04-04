@@ -12,5 +12,7 @@ func RegisterDiscussionRoutes(router *gin.Engine, appService *discussion_app.Dis
 	DiscussionGroup := router.Group("/discussion")
 	{
 		DiscussionGroup.POST("/all", h.GetAllDiscussion)
+		DiscussionGroup.POST("/:id", h.GetDiscussionById)
+		DiscussionGroup.POST("/save", h.SaveDiscussion)
 	}
 }
