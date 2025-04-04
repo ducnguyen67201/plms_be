@@ -1,13 +1,20 @@
 package problem_domain
 
-import "time"
+import (
+	"encoding/json"
+	"plms_be/utils"
+	"time"
+
+	"github.com/rabbitmq/amqp091-go"
+)
 
 type ProblemService struct {
 	repo ProblemRepository
+	mqClient *utils.MQClient
 }
 
-func NewProblemService(repo ProblemRepository) *ProblemService {
-	return &ProblemService{repo: repo}
+func NewProblemService(repo ProblemRepository, mq *utils.MQClient) *ProblemService {
+	return &ProblemService{repo: repo, mqClient: mq}
 }
 
 func (s *ProblemService) GetAllProblemDomain() ([]*Problem, error) {
@@ -92,6 +99,29 @@ func (s *ProblemService) SaveTestCaseDomain(testCase *PartialTestCaseUpdate) err
 	}
 
 	err = s.repo.SaveTestCaseDomain(testCaseById)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *ProblemService) SubmitProblemDomain(submit *SubmitProblem) error {
+	body, err := json.Marshal(submit)
+	if err != nil {
+		return err
+	}
+
+	err = s.mqClient.Channel.Publish(
+		"", 
+		"judge_problem", // routing key (queue name)
+		false,
+		false,
+		amqp091.Publishing{
+			ContentType: "application/json",
+			Body:        body,
+		},
+	)
 	if err != nil {
 		return err
 	}

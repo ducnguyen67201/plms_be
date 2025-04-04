@@ -1,6 +1,8 @@
 package problem_app
 
-import problem_domain "plms_be/internal/domain/problem"
+import (
+	problem_domain "plms_be/internal/domain/problem"
+)
 
 type ProblemAppService struct {
 	ProblemService *problem_domain.ProblemService
@@ -40,6 +42,14 @@ func (p *ProblemAppService) GetTestCaseById(id int64) (*problem_domain.TestCase,
 
 func (p *ProblemAppService) SaveTestCase(testCase *problem_domain.PartialTestCaseUpdate)  error {
 	err := p.ProblemService.SaveTestCaseDomain(testCase)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *ProblemAppService) SubmitProblem(submit *problem_domain.SubmitProblem) error {
+	err := p.ProblemService.SubmitProblemDomain(submit)
 	if err != nil {
 		return err
 	}

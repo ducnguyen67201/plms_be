@@ -50,3 +50,8 @@ type PartialTestCaseUpdate struct {
 	UpdatedAt      *string `json:"updated_at"`
 	IsActive       *string `json:"is_active"`
 }
+
+type SubmitProblem struct {
+	ProblemID  int64  `json:"problem_id"`
+	SourceCode string `json:"source_code"`
+}

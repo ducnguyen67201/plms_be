@@ -19,6 +19,7 @@ import (
 	learning_http "plms_be/internal/interfaces/http/learning_material"
 	problem_http "plms_be/internal/interfaces/http/problem"
 	user_http "plms_be/internal/interfaces/http/user"
+	"plms_be/utils"
 	"time"
 
 	_ "github.com/alexbrainman/odbc"
@@ -50,6 +51,15 @@ func main() {
 		log.Fatal("db.Ping failed:", err)
 	}
 
+	// Init Message Queue 
+	mqClient ,err := utils.InitRabbitMQ("amqp://admin:admin@localhost:5672/")
+	if err != nil {
+		log.Fatal("Failed to connect to RabbitMQ:", err)
+	}
+	
+	defer mqClient.Conn.Close()
+	defer mqClient.Channel.Close()
+
 	// User Service
 	repo := &user_oracle_db.OracleUserRepository{DB: db}
 	userDomain := user_domain.NewService(repo)
@@ -57,7 +67,7 @@ func main() {
 
 	// Problem Service
 	problemRepo := &problem_db.OracleProblemRepository{DB: db}
-	problemDomain := problem_domain.NewProblemService(problemRepo)
+	problemDomain := problem_domain.NewProblemService(problemRepo, mqClient)
 	problemService := &problem_app.ProblemAppService{ProblemService: problemDomain}
 
 	// Discussion Service
