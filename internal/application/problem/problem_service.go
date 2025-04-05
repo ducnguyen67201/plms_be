@@ -48,10 +48,10 @@ func (p *ProblemAppService) SaveTestCase(testCase *problem_domain.PartialTestCas
 	return nil
 }
 
-func (p *ProblemAppService) SubmitProblem(submit *problem_domain.SubmitProblem) error {
-	err := p.ProblemService.SubmitProblemDomain(submit)
+func (p *ProblemAppService) SubmitProblem(submit *problem_domain.SubmitProblem) (*string , error) {
+	job_id ,  err := p.ProblemService.SubmitProblemDomain(submit)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return job_id, nil
 }

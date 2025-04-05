@@ -39,6 +39,14 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	redis,err  := utils.ConnectRedis()
+	if err != nil { 
+		log.Fatal("Failed to connect to Redis:", err)
+	}
+	defer redis.Close()
+
+
+
 	connStr := "Driver={Oracle in OraDB21Home1};Dbq=localhost:1521/xe;Uid=damg7275_final;Pwd=damg7275_final;"
 	db, err := sql.Open("odbc", connStr)
 
@@ -66,7 +74,7 @@ func main() {
 	userService := &user_app.UserAppService{UserService: userDomain}
 
 	// Problem Service
-	problemRepo := &problem_db.OracleProblemRepository{DB: db}
+	problemRepo := &problem_db.OracleProblemRepository{DB: db, Redis : redis}
 	problemDomain := problem_domain.NewProblemService(problemRepo, mqClient)
 	problemService := &problem_app.ProblemAppService{ProblemService: problemDomain}
 

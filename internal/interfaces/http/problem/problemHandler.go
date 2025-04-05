@@ -111,7 +111,7 @@ func (h *ProblemHandler) SubmitProblem(c *gin.Context) {
 		return
 	}
 
-	err := h.ProblemService.SubmitProblem(&req)
+	job_id , err := h.ProblemService.SubmitProblem(&req)
 	if err != nil {
 		response.Result = Const.FAIL
 		response.Message = err.Error()
@@ -121,5 +121,8 @@ func (h *ProblemHandler) SubmitProblem(c *gin.Context) {
 
 	response.Result = Const.SUCCESS
 	response.Message = "Submit problem successfully"
+	response.Data = map[string]interface{}{
+		"job_id": job_id,
+	}
 	c.JSON(http.StatusOK, response)
 }

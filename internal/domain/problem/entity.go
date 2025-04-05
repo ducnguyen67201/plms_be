@@ -1,5 +1,7 @@
 package problem_domain
 
+import "time"
+
 type Problem struct {
 	ProblemID       int64  `json:"problem_id"`
 	ContestID       *int64 `json:"contest_id"`
@@ -52,7 +54,12 @@ type PartialTestCaseUpdate struct {
 }
 
 type SubmitProblem struct {
-	ProblemID  int64  `json:"problem_id"`
-	SourceCode string `json:"source_code"`
-	Language   string `json:"language"`
+	SubmissionID   string    `json:"submission_id"`
+	UserID 	  int64    `json:"user_id"`
+	ProblemID 	int64     `json:"problem_id"`
+	SubmissionDate time.Time `json:"submission_date"`
+	Result         string    `json:"result"`
+	Performance    string    `json:"performance"`
+	Code 		 string    `json:"code"`
+	Language       string    `json:"language"`
 }

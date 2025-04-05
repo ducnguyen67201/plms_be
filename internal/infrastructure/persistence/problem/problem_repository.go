@@ -5,10 +5,14 @@ import (
 	"fmt"
 	"log"
 	problem_domain "plms_be/internal/domain/problem"
+	ViewModel "plms_be/viewModel"
+
+	"github.com/go-redis/redis/v8"
 )
 
 type OracleProblemRepository struct {
 	DB *sql.DB
+	Redis *redis.Client
 }
 
 func (r *OracleProblemRepository) GetAllProblemDomain() ([]*problem_domain.Problem, error) {
@@ -220,5 +224,15 @@ func (r *OracleProblemRepository) SaveTestCaseDomain(testCase *problem_domain.Te
 		return err
 	}
 
+	return nil
+}
+
+func (r *OracleProblemRepository) SubmitJobInProgress(submit *ViewModel.CodeJob) error {
+	// * Write data to Redis,indicate job is in progress 
+	err := r.Redis.Set(r.Redis.Context(), submit.JobID, `{"status": "in progress"}`, 0).Err()
+	if err != nil {
+		log.Println("Error setting value in Redis:", err)
+		return err
+	}
 	return nil
 }
