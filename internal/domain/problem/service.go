@@ -2,7 +2,9 @@ package problem_domain
 
 import (
 	"encoding/json"
+	"fmt"
 	"plms_be/utils"
+	ViewModel "plms_be/viewModel"
 	"time"
 
 	"github.com/rabbitmq/amqp091-go"
@@ -107,7 +109,14 @@ func (s *ProblemService) SaveTestCaseDomain(testCase *PartialTestCaseUpdate) err
 }
 
 func (s *ProblemService) SubmitProblemDomain(submit *SubmitProblem) error {
-	body, err := json.Marshal(submit)
+	var sendOverContent ViewModel.CodeJob
+
+	jobId := fmt.Sprintf("code_submit_%d", submit.ProblemID)
+	sendOverContent.JobID = jobId
+	sendOverContent.Language = submit.Language
+	sendOverContent.SourceCode = submit.SourceCode
+
+	body, err := json.Marshal(sendOverContent)
 	if err != nil {
 		return err
 	}

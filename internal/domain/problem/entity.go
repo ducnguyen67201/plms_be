@@ -54,4 +54,5 @@ type PartialTestCaseUpdate struct {
 type SubmitProblem struct {
 	ProblemID  int64  `json:"problem_id"`
 	SourceCode string `json:"source_code"`
+	Language   string `json:"language"`
 }
