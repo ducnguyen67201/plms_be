@@ -10,6 +10,8 @@ type Problem struct {
 	DifficultyLevel string `json:"difficulty_level"`
 	RepeatedTimes   int64  `json:"repeated_times"`
 	Type            string `json:"type"`
+	MethodName    	string `json:"method_name"`
+	SkeletonCode 	string `json:"skeleton_code"`
 }
 
 type PartialProblemUpdate struct {
@@ -30,6 +32,9 @@ type ProblemWithTestCase struct {
 	DifficultyLevel string     `json:"difficulty_level"`
 	RepeatedTimes   int64      `json:"repeated_times"`
 	Type            string     `json:"type"`
+	MethodName     string     `json:"method_name"`
+	SkeletonCode  string     `json:"skeleton_code"`
+	
 	TestCase        []TestCase `json:"test_cases"`
 }
 

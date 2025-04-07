@@ -34,6 +34,8 @@ func (r *OracleProblemRepository) GetAllProblemDomain() ([]*problem_domain.Probl
 			&problem.DifficultyLevel,
 			&problem.RepeatedTimes,
 			&problem.Type,
+			&problem.MethodName,
+			&problem.SkeletonCode,
 		); err != nil {
 			return nil, err
 		}
@@ -65,6 +67,8 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 			difficultyLevel string
 			repeatedTimes   int64
 			problemType     string
+			methodName    string
+			skeletonCode   string
 
 			testCaseID 	int64
 			input 		string
@@ -82,6 +86,8 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 			&difficultyLevel,
 			&repeatedTimes,
 			&problemType,
+			&methodName,
+			&skeletonCode,
 
 			&testCaseID,
 			&input,
@@ -103,6 +109,8 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 				DifficultyLevel: difficultyLevel,
 				RepeatedTimes:   repeatedTimes,
 				Type:            problemType,
+				MethodName:      methodName,
+				SkeletonCode:    skeletonCode,
 				TestCase:       []problem_domain.TestCase{},
 			}
 			firstRow = false
