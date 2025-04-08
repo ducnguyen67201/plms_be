@@ -12,4 +12,5 @@ type ProblemRepository interface {
 	SaveTestCaseDomain(testCase *TestCase) error
 
 	SubmitJobInProgress(job *ViewModel.CodeJob) error
+	CheckSubmissionStatus(job_id string) (*SubmissionResult, error)
 }

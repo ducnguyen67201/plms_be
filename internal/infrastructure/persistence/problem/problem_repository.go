@@ -2,6 +2,7 @@ package problem_db
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	problem_domain "plms_be/internal/domain/problem"
@@ -237,10 +238,31 @@ func (r *OracleProblemRepository) SaveTestCaseDomain(testCase *problem_domain.Te
 
 func (r *OracleProblemRepository) SubmitJobInProgress(submit *ViewModel.CodeJob) error {
 	// * Write data to Redis,indicate job is in progress 
-	err := r.Redis.Set(r.Redis.Context(), submit.JobID, `{"status": "in progress"}`, 0).Err()
+	err := r.Redis.Set(r.Redis.Context(), submit.JobID, `{"result": "in_progress"}`, 0).Err()
 	if err != nil {
 		log.Println("Error setting value in Redis:", err)
 		return err
 	}
 	return nil
+}
+
+func (r *OracleProblemRepository) CheckSubmissionStatus(job_id string) (*problem_domain.SubmissionResult, error) {
+	var result problem_domain.SubmissionResult
+	// * Check for code submission status in Redis
+	value , err := r.Redis.Get(r.Redis.Context(), job_id).Result()
+	if err == redis.Nil { 
+		return nil, fmt.Errorf("job id not found")
+	} else if err != nil { 
+		return nil , fmt.Errorf("error getting value from Redis: %v", err)
+	} else { 
+		log.Printf("value from Redis: %s", value)
+	}
+
+	err = json.Unmarshal([]byte(value), &result)
+	if err != nil {
+		log.Println("Error unmarshalling JSON:", err)
+		return nil, err
+	}
+
+	return &result, nil
 }

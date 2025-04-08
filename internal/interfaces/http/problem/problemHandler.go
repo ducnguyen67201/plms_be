@@ -126,3 +126,47 @@ func (h *ProblemHandler) SubmitProblem(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *ProblemHandler) CheckSubmissionStatus(c *gin.Context) {
+	var response ViewModel.CommonResponse
+	job_id := c.Param("job_id")
+
+	// * Check for code submission status in Redis 
+	// * If not found, return error, 
+	// 			if found and the status is "in progress", return in progress message
+	//  		If found and the status is "completed", return the result
+	status, err := h.ProblemService.CheckSubmissionStatus(job_id)
+
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	if status == nil {
+		response.Result = Const.FAIL
+		response.Message = "Job ID not found"
+		c.JSON(http.StatusNotFound, response)
+		return
+	}
+
+	if status.Result == "failed" { 
+		response.Result = "failed" 
+		response.Message = "Your code is incorrect"
+		c.JSON(http.StatusOK, response)
+		return
+	}
+
+	if status.Result == "in_progress" {
+		response.Result = "in_progress"
+		response.Message = "Job is still in progress"
+		c.JSON(http.StatusOK, response)
+		return
+	}
+
+	response.Result = Const.SUCCESS
+	response.Message = "Check submission status successfully"
+	response.Data = status
+	c.JSON(http.StatusOK, response)
+}

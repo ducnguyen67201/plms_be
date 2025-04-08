@@ -55,3 +55,11 @@ func (p *ProblemAppService) SubmitProblem(submit *problem_domain.SubmitProblem) 
 	}
 	return job_id, nil
 }
+
+func (p *ProblemAppService) CheckSubmissionStatus(job_id string) (*problem_domain.SubmissionResult, error) {
+	result, err := p.ProblemService.CheckSubmissionStatusDomain(job_id)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}

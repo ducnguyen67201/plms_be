@@ -2,6 +2,7 @@ package problem_domain
 
 import (
 	"encoding/json"
+	"fmt"
 	"plms_be/utils"
 	ViewModel "plms_be/viewModel"
 	"time"
@@ -148,4 +149,40 @@ func (s *ProblemService) SubmitProblemDomain(submit *SubmitProblem) (*string ,er
 	}
 
 	return &job_id , nil
+}
+
+func (s *ProblemService) CheckSubmissionStatusDomain(job_id string) (*SubmissionResult, error) {
+	var result SubmissionResult
+	submissionStatus , err := s.repo.CheckSubmissionStatus(job_id)
+	if err != nil {
+		return nil, err
+	}
+
+	if submissionStatus == nil {
+		return nil, fmt.Errorf("submission not found")
+	}
+
+	if submissionStatus.Result == "failed" {
+		result.JobID = job_id
+		result.Result = submissionStatus.Result
+		return &result, nil
+	}
+	
+	if submissionStatus.Result == "in_progress" {
+		result.JobID = job_id
+		result.Result = "in_progress"
+		return &result, nil
+	}
+
+	if submissionStatus.Result == "success" {
+		result.JobID = job_id
+		result.SubmissionID = submissionStatus.SubmissionID
+		result.UserID = submissionStatus.UserID
+		result.ProblemID = submissionStatus.ProblemID
+		result.SubmissionDate = submissionStatus.SubmissionDate
+		result.Result = submissionStatus.Result
+		result.Performance = submissionStatus.Performance
+		return &result, nil
+	}
+	return &result , nil
 }

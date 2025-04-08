@@ -34,7 +34,7 @@ type ProblemWithTestCase struct {
 	Type            string     `json:"type"`
 	MethodName     string     `json:"method_name"`
 	SkeletonCode  string     `json:"skeleton_code"`
-	
+
 	TestCase        []TestCase `json:"test_cases"`
 }
 
@@ -67,4 +67,14 @@ type SubmitProblem struct {
 	Performance    string    `json:"performance"`
 	Code 		 string    `json:"code"`
 	Language       string    `json:"language"`
+}
+
+type SubmissionResult  struct { 
+	JobID string `json:"job_id"`
+	SubmissionID string `json:"submission_id"`
+	UserID int64 `json:"user_id"`
+	ProblemID int64 `json:"problem_id"`
+	SubmissionDate time.Time `json:"submission_date"`
+	Result string `json:"result"`
+	Performance string `json:"performance"`
 }

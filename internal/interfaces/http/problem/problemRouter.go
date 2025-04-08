@@ -16,6 +16,9 @@ func RegisterProblemRoutes(router *gin.Engine, appService *problem_app.ProblemAp
 		ProblemGroup.POST("/save", h.SaveProblem)
 		
 		ProblemGroup.POST("/submit", h.SubmitProblem)
+
+		// * Check for code submission status
+		ProblemGroup.POST("/job/:job_id", h.CheckSubmissionStatus)
 	}
 
 	TestCaseGroup := router.Group("/testcase")
