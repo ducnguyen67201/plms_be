@@ -2,7 +2,9 @@ package discussion_db
 
 import (
 	"database/sql"
+	"fmt"
 	discussion_domain "plms_be/internal/domain/discussion"
+	"time"
 )
 
 type OracleDiscussionRepository struct {
@@ -65,4 +67,93 @@ func (r *OracleDiscussionRepository) SaveDiscussion(discussion *discussion_domai
 		return err
 	}
 	return nil
+}
+
+func (r *OracleDiscussionRepository) CreateCommentOnDiscussionPostId(input *discussion_domain.CreateDiscussionComent) error {
+	stmt := `BEGIN CreateCommentOnDiscussionPostId(:discussion_id, :user_id, :user_comment); END;`
+
+	var result string
+
+	_, err := r.DB.Exec(stmt,
+		input.DiscussionID,
+		input.UserID,
+		input.UserComment,
+	)
+	fmt.Printf("result: %s\n", result)
+	if err != nil {
+		return  err
+	}
+
+	return nil
+}
+
+func (r *OracleDiscussionRepository) GetAllCommentOnDiscussionPostId(id int64) (*discussion_domain.DiscussionWithComment, error) {
+	query := `SELECT * FROM GetDiscussionComment WHERE discussion_id = :1;`
+
+	rows, err := r.DB.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var discussion *discussion_domain.DiscussionWithComment
+	var firstRow bool = true
+
+	for rows.Next() {
+		var (
+			discussionID    int64
+			title           string
+			topic           string
+			content         string
+			discussionLike  int64
+			createdDate     time.Time
+			createdBy       int64
+
+			userID      int64
+			userComment string
+			username    string
+		)
+
+		err := rows.Scan(
+			&discussionID,
+			&title,
+			&topic,
+			&content,
+			&discussionLike,
+			&createdDate,
+			&createdBy,
+			&userID,
+			&userComment,
+			&username,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if firstRow {
+			discussion = &discussion_domain.DiscussionWithComment{
+				DiscussionID:    discussionID,
+				Title:           title,
+				Topic:           topic,
+				Content:         content,
+				Discussion_like: discussionLike,
+				Created_date:    createdDate,
+				Created_by:      createdBy,
+				Comment:         []discussion_domain.Comment{},
+			}
+			firstRow = false
+		}
+
+		discussion.Comment = append(discussion.Comment, discussion_domain.Comment{
+			UserID:      userID,
+			UserComment: userComment,
+			Username:    username,
+		})
+	}
+
+	if discussion == nil {
+		return nil, nil
+	}
+
+	return discussion, nil
 }

@@ -14,5 +14,11 @@ func RegisterDiscussionRoutes(router *gin.Engine, appService *discussion_app.Dis
 		DiscussionGroup.POST("/all", h.GetAllDiscussion)
 		DiscussionGroup.POST("/:id", h.GetDiscussionById)
 		DiscussionGroup.POST("/save", h.SaveDiscussion)
+
+		CommentGroup := DiscussionGroup.Group("/comment")
+		{
+			CommentGroup.POST("/create", h.CreateCommentOnDiscussionPostId)
+			CommentGroup.POST("/all/:id", h.GetAllCommentOnDiscussionPostId)
+		}
 	}
 }

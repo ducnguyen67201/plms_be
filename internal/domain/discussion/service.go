@@ -59,3 +59,21 @@ func (r *DiscussionService) SaveDiscussion(discussion *PartialDiscussionUpdate) 
 
 	return nil
 }
+
+func (r *DiscussionService) CreateCommentOnDiscussionPostId(input *CreateDiscussionComent) error {
+	err := r.repo.CreateCommentOnDiscussionPostId(input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *DiscussionService) GetAllCommentOnDiscussionPostId(id int64) (*DiscussionWithComment, error) {
+	comments, err := r.repo.GetAllCommentOnDiscussionPostId(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return comments, nil
+}

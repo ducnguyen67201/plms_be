@@ -84,3 +84,51 @@ func (h *DiscussionHandler) SaveDiscussion(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *DiscussionHandler) CreateCommentOnDiscussionPostId(c *gin.Context) {
+	var response ViewModel.CommonResponse
+	var input discussion_domain.CreateDiscussionComent
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err := h.DiscussionAppService.CreateCommentOnDiscussionPostId(&input)
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Result = Const.SUCCESS
+	response.Message = "Create comment on discussion post successfully"
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *DiscussionHandler) GetAllCommentOnDiscussionPostId(c *gin.Context) { 
+	var response ViewModel.CommonResponse
+	id := c.Param("id")
+	idInt64, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = "Invalid ID format"
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	comments, err := h.DiscussionAppService.GetAllCommentOnDiscussionPostId(idInt64)
+	if err != nil {
+		response.Result = Const.FAIL
+		response.Message = err.Error()
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Result = Const.SUCCESS
+	response.Message = "Get all comments on discussion post successfully"
+	response.Data = comments
+	c.JSON(http.StatusOK, response)
+}

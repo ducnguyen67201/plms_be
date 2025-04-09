@@ -59,6 +59,7 @@ func (r *OracleProblemRepository) GetProblemByIdDomain(id string) (*problem_doma
 	}
 	var problem *problem_domain.ProblemWithTestCase
 	var firstRow bool = true 
+	defer rows.Close()
 	for rows.Next() { 
 		var ( 
 			problemID       int64

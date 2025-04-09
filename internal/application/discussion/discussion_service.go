@@ -29,3 +29,19 @@ func (d *DiscussionAppService) SaveDiscussion(discussion *discussion_domain.Part
 	}
 	return nil
 }
+
+func (d *DiscussionAppService) CreateCommentOnDiscussionPostId(input *discussion_domain.CreateDiscussionComent) error {
+	err := d.DiscussionService.CreateCommentOnDiscussionPostId(input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *DiscussionAppService) GetAllCommentOnDiscussionPostId(id int64) (*discussion_domain.DiscussionWithComment, error) {
+	comments, err := d.DiscussionService.GetAllCommentOnDiscussionPostId(id)
+	if err != nil {
+		return nil, err
+	}
+	return comments, nil
+}
